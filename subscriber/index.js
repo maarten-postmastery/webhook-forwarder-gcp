@@ -1,30 +1,27 @@
 const request = require('request');
 
-const forwardUrl = 'https://host/path/';
-
 /**
- * Background function triggered by Pub/Sub and forwards the message to a URL.
+ * Background Cloud Function to be triggered by Pub/Sub.
+ * This function is exported by index.js, and executed when
+ * the trigger topic receives a message.
  *
- * @param {object} event The Cloud Functions event.
- * @param {function} callback The callback function.
+ * @param {object} pubSubEvent The event payload.
+ * @param {object} context The event metadata.
  */
-exports.subscriber = (event, callback) => {
+exports.subscriber = (pubSubEvent, context) => {
 
-    // https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage
-    const message = event.data;
-
-    // ignore messages older than 1 hour to avoid large queue and infinite retries
-    const age = Date.now() - Date.parse(message.publishTime);
+    // https://cloud.google.com/functions/docs/bestpractices/retries#set_an_end_condition_to_avoid_infinite_retry_loops
+    const age = Date.now() - Date.parse(context.timestamp);
     if (age > 60*60*1000) {
-        callback();
         return;
     }
 
-    // pub/sub message data is base64 encoded
-    const body = Buffer.from(message.data, 'base64');
+    // https://cloud.google.com/functions/docs/calling/pubsub#event_structure
+    const body = Buffer.from(pubSubEvent.data, 'base64').toString('utf-8');
 
     const options = {
-        url: forwardUrl,
+        // https://cloud.google.com/functions/docs/env-var#accessing_environment_variables_at_runtime
+        url: process.env.FORWARD_URL,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
             //'Authorization': 'Basic ' + Buffer.from('username:password').toString('base64')
@@ -35,14 +32,11 @@ exports.subscriber = (event, callback) => {
     req = request.post(options, (err, res, body) => {
         if (err) {
             console.error(err);
-            callback(err);
-            return;
+            throw new Error(err);
         }
         if (res.statusCode != 200) {
             console.error(body);
-            callback(new Error(res.StatusMessage));
-            return;
+            throw new Error(res.StatusMessage);
         }
-        callback();
     });
 };
