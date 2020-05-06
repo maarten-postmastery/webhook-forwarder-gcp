@@ -1,5 +1,5 @@
 {
     "dependencies": {
-        "@google-cloud/pubsub": "^0.18.0"
+        "@google-cloud/pubsub": "~0.22.0"
     }
 }

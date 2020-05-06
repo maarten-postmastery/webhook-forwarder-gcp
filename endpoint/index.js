@@ -1,14 +1,20 @@
-const PubSub = require('@google-cloud/pubsub');
+const {PubSub} = require('@google-cloud/pubsub');
 const topicName = 'webhook';
+
+// https://cloud.google.com/nodejs/docs/reference/pubsub/0.22.x/Publisher
+const pubsub = new PubSub();
+const topic = pubsub.topic(topicName);
+const publisher = topic.publisher();
 
 /**
  * HTTP function called by webhook and publishes post data to Pub/Sub.
  *
  * @param {Object} req Cloud Function request context.
+ *                     More info: https://expressjs.com/en/api.html#req
  * @param {Object} res Cloud Function response context.
+ *                     More info: https://expressjs.com/en/api.html#res
  */
 exports.endpoint = (req, res) => {
-    // http://expressjs.com/en/4x/api.html#req
     if (req.method != 'POST') {
         res.status(405).send('Method not allowed');
         return;
@@ -23,11 +29,6 @@ exports.endpoint = (req, res) => {
     //    res.status(403).send('Forbidden');
     //    return;
     //}
-
-    // https://cloud.google.com/nodejs/docs/reference/pubsub/0.18.x/Publisher
-    const pubsub = new PubSub();
-    const topic = pubsub.topic(topicName);
-    const publisher = topic.publisher();
       
     publisher.publish(req.rawBody, (err, messageId) => {
         if (err) {

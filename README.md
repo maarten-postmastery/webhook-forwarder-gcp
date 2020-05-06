@@ -34,18 +34,21 @@ Click Create function and enter the following details:
 * Memory allocated: Select the default
 * Trigger: Select HTTP trigger
 * URL: Save the URL, which is needed by the webhook provider
-* Authentication: Leave "Allow unauthenticated invocations" checked
+* Authentication: Check "Allow unauthenticated invocations"
 * Source code: Select Inline editor
+* Runtime: Select Node.js
 * index.js: Copy the code from endpoint/index.js
 * package.json: Copy the code from endpoint/package.json
 * Function to execute: Enter "endpoint"
+
+The region can be changed under Advanced options. Choose a region that is close to the webhook provider.
 
 #### Using gcloud
 
 Make sure the default project is properly set or add --project to the glcloud commands below.
 
     cd endpoint
-    gcloud functions deploy endpoint --trigger-http
+    gcloud functions deploy endpoint --runtime nodejs8 --trigger-http --allow-unauthenticated
 
 ### Deploy subscribers
 
@@ -61,26 +64,29 @@ Click Create function and enter the following details:
 
 * Name: Enter a name to identify the subscriber, e.g. "analytics"
 * Memory allocated: Select the default
-* Trigger: Select Cloud Pub/Sub topic
+* Trigger: Select Cloud Pub/Sub
 * Topic: Create a new topic "webhook" or select it when already created
 * Source code: Select Inline editor
 * index.js: Copy the code from subscriber/index.js and adapt as needed
 * package.json: Copy the code from subscriber/package.json
 * Function to execute: Enter "subscriber"
-* Click More to open Advanced options: Enable Retry on failure.
+* Open Evironment variables, ... and more. 
+* Advanced options: Enable Retry on failure.
 * Environment variables: Click Add variable. Enter name FORWARD_URL with the destination url as value. 
+
+To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the name and change the FORWARD_URL.
 
 #### Using gcloud
 
 Make sure the default project is properly set or add --project to the glcloud commands below.
 
     cd subscriber
-    gcloud functions deploy analytics --entry-point=subscriber --set-env-vars FORWARD_URL=https://path/to/endpoint --trigger-topic=webhook --retry
+    gcloud functions deploy analytics --runtime nodejs8 --entry-point=subscriber --set-env-vars FORWARD_URL=https://path/to/endpoint --trigger-topic=webhook --retry
 
 ## Testing
 
 Use cURL to submit a test message. Use the endpoint URL shown in the function properties. Below is an example of a Sendgrid webhook request:
 
-    curl -X POST -H "Content-Type: application/json" -d '[{"email":"john.doe@sendgrid.com","timestamp":1337197600,"smtp-id":"<4FB4041F.6080505@sendgrid.com>","event":"processed"},{"email":"john.doe@sendgrid.com","timestamp":1337966815,"category":"newuser","event":"click","url":"https://sendgrid.com"},{"email":"john.doe@sendgrid.com","timestamp":1337969592,"smtp-id":"<20120525181309.C1A9B40405B3@Example-Mac.local>","event":"processed"}]' https://us-central1-my-project-id.cloudfunctions.net/endpoint 
+    curl -X POST -i -H "Content-Type: application/json" -d '[{"email":"john.doe@sendgrid.com","timestamp":1588777534,"smtp-id":"<4FB4041F.6080505@sendgrid.com>","event":"processed"},{"email":"john.doe@sendgrid.com","timestamp":1588777600,"category":"newuser","event":"click","url":"https://sendgrid.com"},{"email":"john.doe@sendgrid.com","timestamp":1588777692,"smtp-id":"<20120525181309.C1A9B40405B3@Example-Mac.local>","event":"processed"}]' https://us-central1-my-project-id.cloudfunctions.net/endpoint 
 
 You can check the logs of each function in the console.
