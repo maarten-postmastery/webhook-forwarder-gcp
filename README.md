@@ -1,12 +1,12 @@
 # Webhook Forwarder
 
-Does your webhook provider support one endpoint, and you need multiple? Use this template to deploy a webhook forwarder on Google Cloud Platform with minimal effort.
+Does your webhook provider support one endpoint, and you need multiple? Use this template to deploy a webhook forwarder on Google Cloud Platform (GCP) with minimal effort.
 
 The template leverages [Google Cloud Functions](https://cloud.google.com/functions/docs/concepts/overview) and [Google Cloud Pub/Sub](https://cloud.google.com/pubsub/docs/overview) to provide scalability, reliability, and separation with minimal code.
 
 The endpoint function receives HTTPS POST requests from a webhook and publishes the messages to a Pub/Sub topic. The subscriber function is subscribed to the Pub/Sub topic and forwards the messages to a specific URL. Multiple subscriber functions with different URLs can be deployed, which all get the same messages. 
 
-Through Pub/Sub the endpoint is decoupled from the subscribers. Incoming messages are immediately achknowledged as soon as the message is saved in the queue. If forwarding to a receiver fails, the message remains in the queue and the subscriber function is retried. 
+Through Pub/Sub the endpoint is decoupled from the subscribers. Incoming messages are immediately acknowledged as soon as the message is saved in the queue. If forwarding to a receiver fails, the message remains in the queue and the subscriber function is retried. 
 
 ## Deployment
 
