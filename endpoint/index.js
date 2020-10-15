@@ -1,10 +1,8 @@
 const {PubSub} = require('@google-cloud/pubsub');
 const topicName = 'webhook';
 
-// https://cloud.google.com/nodejs/docs/reference/pubsub/0.22.x/Publisher
 const pubsub = new PubSub();
-const topic = pubsub.topic(topicName);
-const publisher = topic.publisher();
+const topic = pubsub.topic(topicName); // .setPublishOptions(...);
 
 /**
  * HTTP function called by webhook and publishes post data to Pub/Sub.
@@ -30,7 +28,7 @@ exports.endpoint = (req, res) => {
     //    return;
     //}
       
-    publisher.publish(req.rawBody, (err, messageId) => {
+    topic.publish(req.rawBody, (err, messageId) => {
         if (err) {
             console.error(err);
             res.status(500).end();

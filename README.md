@@ -48,7 +48,7 @@ The region can be changed under Advanced options. Choose a region that is close 
 Make sure the default project is properly set or add --project to the glcloud commands below.
 
     cd endpoint
-    gcloud functions deploy endpoint --runtime nodejs8 --trigger-http --allow-unauthenticated
+    gcloud functions deploy endpoint --runtime nodejs10 --trigger-http --allow-unauthenticated
 
 ### Deploy subscribers
 
@@ -81,7 +81,7 @@ To create another subscriber, in the list of functions select Actions on the fir
 Make sure the default project is properly set or add --project to the glcloud commands below.
 
     cd subscriber
-    gcloud functions deploy analytics --runtime nodejs8 --entry-point=subscriber --set-env-vars FORWARD_URL=https://path/to/endpoint --trigger-topic=webhook --retry
+    gcloud functions deploy analytics --runtime nodejs10 --entry-point=subscriber --set-env-vars FORWARD_URL=https://path/to/endpoint --trigger-topic=webhook --retry
 
 ## Testing
 
