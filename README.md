@@ -26,22 +26,34 @@ Review the source in endpoint/index.js. Add an authentication mechanism if neede
 
 The function code can be changed after deployment using the code editor in the console.
 
+The Pub/Sub topic and subscriptions will be automatically created. This can be checked in the Pub/Sub section of the console after some data is received. You should see the topic and a subscription for each subscriber function. Refresh the page if you don't.
+
 #### Using console
 
-Click Create function and enter the following details:
+Click Create Function and enter the following details:
 
-* Name: Enter "endpoint" or another name.
-* Memory allocated: Select the default
-* Trigger: Select HTTP trigger
-* URL: Save the URL, which is needed by the webhook provider
-* Authentication: Check "Allow unauthenticated invocations"
-* Source code: Select Inline editor
-* Runtime: Select Node.js
-* index.js: Copy the code from endpoint/index.js
-* package.json: Copy the code from endpoint/package.json
-* Function to execute: Enter "endpoint"
-
-The region can be changed under Advanced options. Choose a region that is close to the webhook provider.
+* Basics
+  * Function name: Enter "sendgrid-endpoint" or another name
+  * Region: Select a region close to the webhook provider
+* Trigger
+  * Trigger type: Select HTTP
+  * URL: Note the URL, which is needed by the webhook provider
+  * Authentication: 
+    * Check "Allow unauthenticated invocations"
+    * Check Require HTTPS
+* Variables, networking and advanced settings
+  * Environment variables
+    * Runtime environment variables
+      * Add variable TOPIC_NAME with name for Pub/Sub topic, e.g. "sendgrid-events"
+* Click Next
+* Code
+  * Runtime: Select Node.js 10
+  * Entry point: Enter "endpoint"
+  * Enable the Cloud Build API when asked
+  * Source Code: Inline Editor
+    * index.js: Copy the code from endpoint/index.js
+    * package.json: Copy the code from endpoint/package.json
+* Click Deploy
 
 #### Using gcloud
 
@@ -56,25 +68,31 @@ Review the source in subscriber/index.js. The forwarding URL is set using an env
 
 For multiple subscribers, just add more subscriber functions. Use a different function name and change the forwarding URL. Other options, including the Pub/Sub topic should be the same.
 
-The Pub/Sub topic and subscriptions are automatically created. This can be checked in the Pub/Sub section of the console. You should see the "webhook" topic and a subscription for each subscriber function. Refresh the page if you don't.
-
 #### Using console
 
 Click Create function and enter the following details:
 
-* Name: Enter a name to identify the subscriber, e.g. "analytics"
-* Memory allocated: Select the default
-* Trigger: Select Cloud Pub/Sub
-* Topic: Create a new topic "webhook" or select it when already created
-* Source code: Select Inline editor
-* index.js: Copy the code from subscriber/index.js and adapt as needed
-* package.json: Copy the code from subscriber/package.json
-* Function to execute: Enter "subscriber"
-* Open Evironment variables, ... and more. 
-* Advanced options: Enable Retry on failure.
-* Environment variables: Click Add variable. Enter name FORWARD_URL with the destination url as value. 
+* Basics
+  * Function name: Enter "postmastery-webhook" or another name
+  * Region: Select a region close to the endpoint provider
+* Trigger
+  * Trigger type: Select Cloud Pub/Sub
+  * Select a topic: Create a new topic, e.g. "sendgrid-events" or select it when already created
+  * Retry on failure: Yes
+* Variables, networking and advanced settings
+  * Environment variables
+    * Runtime environment variables
+      * Add variable FORWARD_URL with the destination URL
+* Click Next
+* Code
+  * Runtime: Select Node.js 10
+  * Entry point: Enter "subscriber"
+  * Source Code: Inline Editor
+    * index.js: Copy the code from subscriber/index.js
+    * package.json: Copy the code from subscriber/package.json
+* Click Deploy
 
-To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the name and change the FORWARD_URL.
+To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the function name and optionally the region. Click Save to accept the Trigger settings.  Open Variables and set the FORWARD_URL to the destination URL.
 
 #### Using gcloud
 

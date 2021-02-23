@@ -1,5 +1,5 @@
 const {PubSub} = require('@google-cloud/pubsub');
-const topicName = 'webhook';
+const topicName = process.env.TOPIC_NAME;
 
 const pubsub = new PubSub();
 const topic = pubsub.topic(topicName); // .setPublishOptions(...);

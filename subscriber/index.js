@@ -1,4 +1,5 @@
 const request = require('request');
+const forwardURL = process.env.FORWARD_URL;
 
 /**
  * Background Cloud Function to be triggered by Pub/Sub.
@@ -21,7 +22,7 @@ exports.subscriber = (pubSubEvent, context) => {
 
     const options = {
         // https://cloud.google.com/functions/docs/env-var#accessing_environment_variables_at_runtime
-        url: process.env.FORWARD_URL,
+        url: forwardURL,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
             //'Authorization': 'Basic ' + Buffer.from('username:password').toString('base64')
