@@ -30,29 +30,32 @@ The Pub/Sub topic and subscriptions will be automatically created. This can be c
 
 #### Using console
 
-Click Create Function and enter the following details:
+Click *Create Function*. Enable required APIs when asked. 
+
+Enter the following details:
 
 * Basics
+  * Environment: 1st gen
   * Function name: Enter "sendgrid-endpoint" or another name
   * Region: Select a region close to the webhook provider
 * Trigger
   * Trigger type: Select HTTP
   * URL: Note the URL, which is needed by the webhook provider
   * Authentication: 
-    * Check "Allow unauthenticated invocations"
+    * Check Allow unauthenticated invocations
     * Check Require HTTPS
-* Variables, networking and advanced settings
+  * Click Save
+* Runtime, build, connections and security settings
   * Environment variables
     * Runtime environment variables
       * Add variable TOPIC_NAME with name for Pub/Sub topic, e.g. "sendgrid-events"
 * Click Next
 * Code
   * Runtime: Select Node.js 10
-  * Entry point: Enter "endpoint"
-  * Enable the Cloud Build API when asked
   * Source Code: Inline Editor
     * index.js: Copy the code from endpoint/index.js
     * package.json: Copy the code from endpoint/package.json
+  * Entry point: Enter "endpoint"
 * Click Deploy
 
 #### Using gcloud
@@ -70,7 +73,9 @@ For multiple subscribers, just add more subscriber functions. Use a different fu
 
 #### Using console
 
-Click Create function and enter the following details:
+Click *Create function*. 
+
+Enter the following details:
 
 * Basics
   * Function name: Enter "postmastery-webhook" or another name
@@ -79,17 +84,18 @@ Click Create function and enter the following details:
   * Trigger type: Select Cloud Pub/Sub
   * Select a topic: Create a new topic, e.g. "sendgrid-events" or select it when already created
   * Retry on failure: Yes
-* Variables, networking and advanced settings
+  * Click Save
+* Runtime, build, connections and security settings
   * Environment variables
     * Runtime environment variables
       * Add variable FORWARD_URL with the destination URL
 * Click Next
 * Code
   * Runtime: Select Node.js 10
-  * Entry point: Enter "subscriber"
   * Source Code: Inline Editor
     * index.js: Copy the code from subscriber/index.js
     * package.json: Copy the code from subscriber/package.json
+  * Entry point: Enter "subscriber"
 * Click Deploy
 
 To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the function name and optionally the region. Click Save to accept the Trigger settings.  Open Variables and set the FORWARD_URL to the destination URL.
