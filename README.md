@@ -46,9 +46,10 @@ Enter the following details:
     * Check Require HTTPS
   * Click Save
 * Runtime, build, connections and security settings
-  * Environment variables
+  * RUNTIME
     * Runtime environment variables
-      * Add variable TOPIC_NAME with name for Pub/Sub topic, e.g. "sendgrid-events"
+      * Click Add variable
+      * Add variable "TOPIC_NAME" with name for Pub/Sub topic, e.g. "sendgrid-events"
 * Click Next
 * Code
   * Runtime: Select Node.js 10
@@ -86,9 +87,10 @@ Enter the following details:
   * Retry on failure: Yes
   * Click Save
 * Runtime, build, connections and security settings
-  * Environment variables
+  * RUNTIME
     * Runtime environment variables
-      * Add variable FORWARD_URL with the destination URL
+      * Click Add variable
+      * Add variable "FORWARD_URL" with the destination URL
 * Click Next
 * Code
   * Runtime: Select Node.js 10
@@ -98,7 +100,7 @@ Enter the following details:
   * Entry point: Enter "subscriber"
 * Click Deploy
 
-To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the function name and optionally the region. Click Save to accept the Trigger settings.  Open Variables and set the FORWARD_URL to the destination URL.
+To create another subscriber, in the list of functions select Actions on the first subscriber and click Copy. Then change the function name and optionally the region. Click Save to accept the Trigger settings.  Open Runtime environment variables and set the FORWARD_URL to the destination URL.
 
 #### Using gcloud
 
@@ -111,6 +113,6 @@ Make sure the default project is properly set or add --project to the glcloud co
 
 Use cURL to submit a test message. Use the endpoint URL shown in the function properties. Below is an example of a Sendgrid webhook request:
 
-    curl -X POST -i -H "Content-Type: application/json" -d '[{"email":"john.doe@sendgrid.com","timestamp":1588777534,"smtp-id":"<4FB4041F.6080505@sendgrid.com>","event":"processed"},{"email":"john.doe@sendgrid.com","timestamp":1588777600,"category":"newuser","event":"click","url":"https://sendgrid.com"},{"email":"john.doe@sendgrid.com","timestamp":1588777692,"smtp-id":"<20120525181309.C1A9B40405B3@Example-Mac.local>","event":"processed"}]' https://us-central1-my-project-id.cloudfunctions.net/endpoint 
+    curl -X POST -i -H "Content-Type: application/json" -d '[{"email":"john.doe@sendgrid.com","timestamp":1588777534,"smtp-id":"<4FB4041F.6080505@sendgrid.com>","event":"processed"},{"email":"john.doe@sendgrid.com","timestamp":1588777600,"category":"newuser","event":"click","url":"https://sendgrid.com"},{"email":"john.doe@sendgrid.com","timestamp":1588777692,"smtp-id":"<20120525181309.C1A9B40405B3@Example-Mac.local>","event":"processed"}]' https://us-central1-my-project-id.cloudfunctions.net/sendgrid-endpoint 
 
 You can check the logs of each function in the console.
