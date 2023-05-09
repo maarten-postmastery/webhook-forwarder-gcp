@@ -18,7 +18,16 @@ exports.subscriber = (pubSubEvent, context) => {
     }
 
     // https://cloud.google.com/functions/docs/calling/pubsub#event_structure
-    const body = Buffer.from(pubSubEvent.data, 'base64').toString('utf-8');
+    let body = Buffer.from(pubSubEvent.data, 'base64').toString('utf-8');
+
+    // If the endpoint only needs certain event types:
+    //
+    // const types = ['dropped', 'bounce', 'delivered', 'spamreport'];
+    // const events = JSON.parse(body).filter(e => types.includes(e.event));
+    // if (events.length == 0) {
+    //    return;
+    // }
+    // body = JSON.stringify(events);
 
     const options = {
         // https://cloud.google.com/functions/docs/env-var#accessing_environment_variables_at_runtime
